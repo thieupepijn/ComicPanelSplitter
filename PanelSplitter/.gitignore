@@ -1,0 +1,5 @@
+## gitignore file, Ignore all files in folders obj and bin and Properties
+
+bin/
+obj/
+Properties/

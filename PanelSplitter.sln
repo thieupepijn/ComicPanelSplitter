@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PanelSplitter", "PanelSplitter\PanelSplitter.csproj", "{A05CA10A-7736-454B-87C0-00860FC7FD28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicPanelsSplitter", "ComicPanelsSplitter\ComicPanelsSplitter.csproj", "{A3CCCD2F-EFA7-4209-9C38-50F5A75FE862}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A05CA10A-7736-454B-87C0-00860FC7FD28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A05CA10A-7736-454B-87C0-00860FC7FD28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A05CA10A-7736-454B-87C0-00860FC7FD28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A05CA10A-7736-454B-87C0-00860FC7FD28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3CCCD2F-EFA7-4209-9C38-50F5A75FE862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3CCCD2F-EFA7-4209-9C38-50F5A75FE862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3CCCD2F-EFA7-4209-9C38-50F5A75FE862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3CCCD2F-EFA7-4209-9C38-50F5A75FE862}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {624E3271-1DA4-45B2-972B-B2505750D7D1}
+	EndGlobalSection
+EndGlobal

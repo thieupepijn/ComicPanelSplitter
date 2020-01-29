@@ -1,0 +1,3 @@
+## gitignore file, Ignore all files in folder .vs
+
+.vs/

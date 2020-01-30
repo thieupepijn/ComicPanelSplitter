@@ -8,45 +8,27 @@ namespace ComicPanelsSplitter
     public class Util
     {
 
-        public static bool IsWhite(Bitmap bitmap, Coordinate coordinate)
-        {
-            return IsWhite(bitmap.GetPixel(coordinate.X, coordinate.Y));
-
-        }
-
-        public static bool IsWhite(Color color)
-        {
-            if ((color.A == 255) && (color.R == 255) && (color.G == 255) && (color.B == 255))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
 
         public static List<Coordinate> NonPanelCoordinates(Bitmap bitmap)
         {
             Coordinate startCoordinate = new Coordinate(0, 0);
-
-            if (!IsWhite(bitmap, startCoordinate))
-            {
-                return new List<Coordinate>();
-            }
-
             List<Coordinate> coordinates = new List<Coordinate>();
-            coordinates.Add(startCoordinate);
-
+            NonPanelCoordinates(bitmap, startCoordinate, ref coordinates);
             return coordinates;
         }
 
-
-        
-
-
-       
-
+        public static void NonPanelCoordinates(Bitmap bitmap, Coordinate startCoordinate, ref List<Coordinate> coordinates)
+        {
+            if ((startCoordinate.IsWhite(bitmap)) && (!coordinates.Contains(startCoordinate)))
+            {
+                coordinates.Add(startCoordinate);
+                foreach (Coordinate whiteNeighbour in startCoordinate.WhiteNeighbours(bitmap))
+                {
+                        NonPanelCoordinates(bitmap, whiteNeighbour, ref coordinates);                    
+                }
+            }
+        }
+    
+    
     }
 }

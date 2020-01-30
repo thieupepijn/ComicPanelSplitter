@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Collections.Generic;
 
 namespace ComicPanelsSplitter
 {
@@ -23,16 +24,17 @@ namespace ComicPanelsSplitter
 
             string outputfilePath = Path.Join(exportpath, "panel1.jpg");
 
-            Coordinate coord1 = new Coordinate(0, 0);
-            Coordinate coord2 = new Coordinate(51, 51);
-
-            bool iswit1 = Util.IsWhite(comicPage, coord1);
-            bool iswit50 = Util.IsWhite(comicPage, coord2);
-
+            List<Coordinate> nonPanelCoordinates = Util.NonPanelCoordinates(comicPage);
 
             panel1.Save(outputfilePath, ImageFormat.Jpeg);
 
-            Console.WriteLine("Hello World!");
+            foreach(Coordinate coordinate in nonPanelCoordinates)
+            {
+                string message = string.Format("{0} , [1}", coordinate.X, coordinate.Y);
+                Console.WriteLine(message);
+            }
+
+           
         }
 
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Drawing;
 
 namespace ComicPanelsSplitter
 {
@@ -19,13 +21,13 @@ namespace ComicPanelsSplitter
         public List<Coordinate> Neigbours(int maxX, int maxY)
         {
             List<Coordinate> neighbours = new List<Coordinate>();
-            
+
             Coordinate neighbourLeft = NeighbourLeft();
             Coordinate neighbourUp = NeighbourUp();
             Coordinate neighbourRight = NeighbourRight(maxX);
             Coordinate neighbourDown = NeighbourDown(maxY);
 
-            if(neighbourLeft != null)
+            if (neighbourLeft != null)
             {
                 neighbours.Add(neighbourLeft);
             }
@@ -46,6 +48,30 @@ namespace ComicPanelsSplitter
             }
             return neighbours;
         }
+
+        public List<Coordinate> WhiteNeighbours(Bitmap bitmap)
+        {
+            return Neigbours(bitmap.Width, bitmap.Height).Where(n => n.IsWhite(bitmap)).ToList();
+        }
+
+        public bool IsWhite(Bitmap bitmap)
+        {
+            return IsWhite(bitmap.GetPixel(X, Y));
+
+        }
+
+        private static bool IsWhite(Color color)
+        {
+            if ((color.A == 255) && (color.R == 255) && (color.G == 255) && (color.B == 255))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         private Coordinate NeighbourLeft()
         {
@@ -91,9 +117,35 @@ namespace ComicPanelsSplitter
             }
             else
             {
-                return new Coordinate(X, Y+1);
+                return new Coordinate(X, Y + 1);
             }
         }
+
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            Coordinate other = (Coordinate)obj;
+            if ((other.X == X) && (other.Y == Y))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        public override int GetHashCode()
+        {
+            return new Point(X, Y).GetHashCode();
+        }
+
+
 
     }
 }

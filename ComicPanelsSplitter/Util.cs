@@ -9,26 +9,21 @@ namespace ComicPanelsSplitter
     {
 
 
-        public static List<Coordinate> NonPanelCoordinates(Bitmap bitmap)
+       public static Coordinate FindTopLeftNonWhitePixel(Bitmap bitmap)
         {
-            Coordinate startCoordinate = new Coordinate(0, 0);
-            List<Coordinate> coordinates = new List<Coordinate>();
-            NonPanelCoordinates(bitmap, startCoordinate, ref coordinates);
-            return coordinates;
-        }
-
-        public static void NonPanelCoordinates(Bitmap bitmap, Coordinate startCoordinate, ref List<Coordinate> coordinates)
-        {
-            if ((startCoordinate.IsWhite(bitmap)) && (!coordinates.Contains(startCoordinate)))
+            for(int x=0; x<bitmap.Width; x++)
             {
-                coordinates.Add(startCoordinate);
-                foreach (Coordinate whiteNeighbour in startCoordinate.WhiteNeighbours(bitmap))
+                for(int y=0; y<bitmap.Height; y++)
                 {
-                        NonPanelCoordinates(bitmap, whiteNeighbour, ref coordinates);                    
+                    Coordinate coordinate = new Coordinate(x, y);
+                    if (!coordinate.IsWhite(bitmap))
+                    {
+                        return coordinate;
+                    }
                 }
             }
+            return null;
         }
-    
-    
+
     }
 }

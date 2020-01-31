@@ -19,26 +19,37 @@ namespace ComicPanelsSplitter
             Console.WriteLine("Width: " + comicPage.Width.ToString());
             Console.WriteLine("Height: " + comicPage.Height.ToString());
 
-          //  Rectangle region = new Rectangle(0, 0, 890, 250);
-          //  Bitmap panel1 = comicPage.Clone(region, System.Drawing.Imaging.PixelFormat.DontCare);
+           
+            Coordinate topleft = Util.FindTopLeftNonWhitePixel(comicPage);
 
-           // string outputfilePath = Path.Join(exportpath, "panel1.jpg");
-
-            List<Coordinate> nonPanelCoordinates = Util.NonPanelCoordinates(comicPage);
-
-            //panel1.Save(outputfilePath, ImageFormat.Jpeg);
-
-            foreach(Coordinate coordinate in nonPanelCoordinates)
+           
+           if (topleft != null)
             {
-                string message = string.Format("{0} , {1}", coordinate.X.ToString(), coordinate.Y.ToString());
+                string message = string.Format("topleft; {0} , {1}", topleft.X, topleft.Y);
                 Console.WriteLine(message);
             }
 
-           
+
+            string outputfilePath = Path.Join(exportpath, "panel1.jpg");
+            //CutAndWriteToFile(comicPage, 50, 50, outputfilePath);
+
+            Graphics graafix = Graphics.FromImage(comicPage);
+            graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleft.X - 5, topleft.Y - 5, 10, 10);
+            comicPage.Save(outputfilePath, ImageFormat.Jpeg);
+
         }
 
 
-       
+        private static void CutAndWriteToFile(Bitmap bitmap, int width, int height, string outputfilePath)
+        {
+             Rectangle region = new Rectangle(0, 0, width, height);
+             Bitmap panel = bitmap.Clone(region, PixelFormat.DontCare);
+
+           
+            panel.Save(outputfilePath, ImageFormat.Jpeg);
+
+        }
+
     }
 
 }

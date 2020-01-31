@@ -75,49 +75,49 @@ namespace ComicPanelsSplitter
 
         private Coordinate NeighbourLeft()
         {
-            if (X == 0)
+            if (X > 0)
             {
-                return null;
+                return new Coordinate(X - 1, Y);
             }
             else
             {
-                return new Coordinate(X-1, Y);
+                return null;
             }
         }
 
         private Coordinate NeighbourUp()
         {
-            if (Y == 0)
+            if (Y > 0)
             {
-                return null;
+                return new Coordinate(X, Y-1);
             }
             else
             {
-                return new Coordinate(X, Y-1);
+                return null;
             }
         }
 
         private Coordinate NeighbourRight(int maxX)
         {
-            if (X == maxX)
+            if (X < maxX-1)
             {
-                return null;
+                return new Coordinate(X + 1, Y);
             }
             else
             {
-                return new Coordinate(X + 1, Y);
+                return null;
             }
         }
 
         private Coordinate NeighbourDown(int maxY)
         {
-            if (Y == maxY)
+            if (Y < maxY-1)
             {
-                return null;
+                return new Coordinate(X, Y + 1);
             }
             else
             {
-                return new Coordinate(X, Y + 1);
+                return null;
             }
         }
 

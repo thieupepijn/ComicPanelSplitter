@@ -101,11 +101,23 @@ namespace PanelSplitter
             }
         }
 
+        public void MultiplyBorders(int factor)
+        {
+            Left = Left * factor;
+            Top = Top * factor;
+            Right = Right * factor;
+            Down = Down * factor;
+        }
+
         public static void RemoveSmallRegions(List<FloodFilledRegion> regions)
         {
             regions.RemoveAll(r => r.Right - r.Left < 10);
             regions.RemoveAll(r => r.Down - r.Top < 10);
         }
 
+        public static void MultiplyBorders(List<FloodFilledRegion> regions, int factor)
+        {
+            regions.ForEach(r => r.MultiplyBorders(factor));
+        }
     }
 }

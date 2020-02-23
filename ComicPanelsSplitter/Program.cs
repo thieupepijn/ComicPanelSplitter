@@ -14,20 +14,33 @@ namespace ComicPanelsSplitter
             string imageFilePath = args[0];
             string exportpath = args[1];
 
+            int resizeFactor = 1;
+
+            if (args.Length > 2)
+            {
+                resizeFactor = Convert.ToInt32(args[2]);
+            }
+
+
             List<FloodFilledRegion> regions = new List<FloodFilledRegion>();
             using (Bitmap comicPage = (Bitmap)Image.FromFile(imageFilePath))
             {
-                Coordinate[,] coords = Util.PixelsToCoordinates(comicPage);
-
-                while (Coordinate.GetSuitable(coords).Count > 0)
+                
+                using (Bitmap comicPageResized = Util.Resize(comicPage, resizeFactor))
                 {
+                    Coordinate[,] coords = Util.PixelsToCoordinates(comicPageResized);
 
-                    FloodFilledRegion region = new FloodFilledRegion(coords);
-                    region.ResetFloodedCoords(coords, region.Left, region.Top, region.Right, region.Down);
-                    regions.Add(region);
+                    while (Coordinate.GetSuitable(coords).Count > 0)
+                    {
+
+                        FloodFilledRegion region = new FloodFilledRegion(coords);
+                        region.ResetFloodedCoords(coords, region.Left, region.Top, region.Right, region.Down);
+                        regions.Add(region);
+                    }
                 }
 
                 FloodFilledRegion.RemoveSmallRegions(regions);
+                FloodFilledRegion.MultiplyBorders(regions, resizeFactor);
                 Util.CutandWriteToFile(regions, comicPage, exportpath);
             }
         }

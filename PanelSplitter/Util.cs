@@ -35,13 +35,20 @@ namespace PanelSplitter
             return coords;
         }
 
-        public static void CutandWriteToFile(List<FloodFilledRegion> regions, Bitmap comicPage, string exportpath)
+        public static Bitmap Resize(Bitmap bitmap, int factor)
+        {
+            int width = bitmap.Width / factor;
+            int height = bitmap.Height / factor;
+            return new Bitmap(bitmap, new Size(width, height));
+        }
+
+        public static void CutandWriteToFile(List<FloodFilledRegion> regions, Bitmap bitmap, string exportpath)
         {
             int counter = 1;
             foreach (FloodFilledRegion region in regions)
             {
                 string outputFilePath = Util.GetOutputFilePath(exportpath, counter);
-                CutAndWriteToFile(comicPage, region.Left, region.Top, region.Right, region.Down, outputFilePath);
+                CutAndWriteToFile(bitmap, region.Left,  region.Top, region.Right, region.Down, outputFilePath);
                 counter++;
             }
         }

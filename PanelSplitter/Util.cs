@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.IO;
+using System.Drawing.Imaging;
 
 namespace PanelSplitter
 {
@@ -10,10 +11,10 @@ namespace PanelSplitter
     {
 
 
-        public static string GetOutputFilePath(string inputFilePath, string outputDirectory)
+        public static string GetOutputFilePath(string outputDirectory, int counter)
         {
-            string outputFileName = Path.GetFileNameWithoutExtension(inputFilePath) + "FloodFilled" + Path.GetExtension(inputFilePath);
-            return Path.Combine(outputDirectory, outputFileName);
+            string filename = string.Format("panel{0}.jpg", counter);
+            return Path.Combine(outputDirectory, filename);
         }
 
 
@@ -33,6 +34,27 @@ namespace PanelSplitter
             }
             return coords;
         }
+
+        public static void CutandWriteToFile(List<FloodFilledRegion> regions, Bitmap comicPage, string exportpath)
+        {
+            int counter = 1;
+            foreach (FloodFilledRegion region in regions)
+            {
+                string outputFilePath = Util.GetOutputFilePath(exportpath, counter);
+                CutAndWriteToFile(comicPage, region.Left, region.Top, region.Right, region.Down, outputFilePath);
+                counter++;
+            }
+        }
+
+        public static void CutAndWriteToFile(Bitmap bitmap, int left, int top, int right, int bottom, string outputfilePath)
+        {
+            int width = right - left;
+            int height = bottom - top;
+            Rectangle region = new Rectangle(left, top, width, height);
+            Bitmap panel = bitmap.Clone(region, PixelFormat.DontCare);
+            panel.Save(outputfilePath, ImageFormat.Jpeg);
+        }
+
 
     }
 }

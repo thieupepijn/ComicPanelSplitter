@@ -11,8 +11,6 @@ namespace ComicPanelsSplitter
     {
         static void Main(string[] args)
         {
-
-
             string imageFilePath = args[0];
             string exportpath = args[1];
 
@@ -30,29 +28,13 @@ namespace ComicPanelsSplitter
                 }
 
                 FloodFilledRegion.RemoveSmallRegions(regions);
-
-                int counter = 1;
-                foreach (FloodFilledRegion region in regions)
-                {
-                    string outputfilename = string.Format("panel{0}.jpg", counter);
-                    string outputfilePath = Path.Join(exportpath, outputfilename);
-                    CutAndWriteToFile(comicPage, region.Left, region.Top, region.Right, region.Down, outputfilePath);
-                    counter++;
-                }
+                Util.CutandWriteToFile(regions, comicPage, exportpath);
             }
-
         }
 
 
-        private static void CutAndWriteToFile(Bitmap bitmap, int left, int top, int right, int bottom, string outputfilePath)
-        {
-            int width = right - left;
-            int height = bottom - top;
-             Rectangle region = new Rectangle(left, top, width, height);
-             Bitmap panel = bitmap.Clone(region, PixelFormat.DontCare); 
-            panel.Save(outputfilePath, ImageFormat.Jpeg);
-
-        }
+        
+        
 
     }
 

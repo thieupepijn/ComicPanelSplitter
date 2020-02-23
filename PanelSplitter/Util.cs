@@ -6,7 +6,7 @@ using System.IO;
 
 namespace PanelSplitter
 {
-    class Util
+    public class Util
     {
 
 

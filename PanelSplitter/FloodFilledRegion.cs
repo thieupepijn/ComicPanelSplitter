@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PanelSplitter
 {
-    class FloodFilledRegion
+    public class FloodFilledRegion
     {
 
         public List<Coordinate> Flooded { get; private set; }
@@ -99,6 +99,12 @@ namespace PanelSplitter
                     }
                 }
             }
+        }
+
+        public static void RemoveSmallRegions(List<FloodFilledRegion> regions)
+        {
+            regions.RemoveAll(r => r.Right - r.Left < 10);
+            regions.RemoveAll(r => r.Down - r.Top < 10);
         }
 
     }

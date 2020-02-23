@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Collections.Generic;
+using PanelSplitter;
 
 namespace ComicPanelsSplitter
 {
@@ -15,42 +16,40 @@ namespace ComicPanelsSplitter
             string imageFilePath = args[0];
             string exportpath = args[1];
 
-            Bitmap comicPage = (Bitmap)Image.FromFile(imageFilePath);
-            Console.WriteLine("Width: " + comicPage.Width.ToString());
-            Console.WriteLine("Height: " + comicPage.Height.ToString());
+            List<FloodFilledRegion> regions = new List<FloodFilledRegion>();
+            using (Bitmap comicPage = (Bitmap)Image.FromFile(imageFilePath))
+            {
+                Coordinate[,] coords = Util.PixelsToCoordinates(comicPage);
 
+                while (Coordinate.GetSuitable(coords).Count > 0)
+                {
 
-         //   Coordinate topleft = Util.FindTopLeftNonWhitePixel(comicPage);
-         //   Coordinate topleftLeft = Util.FindFirstWhitePixelLeftFrom(comicPage, topleft);
-         //   Coordinate topleftDown = Util.FindFirstWhitePixelDownFrom(comicPage, topleft);
+                    FloodFilledRegion region = new FloodFilledRegion(coords);
+                    region.ResetFloodedCoords(coords, region.Left, region.Top, region.Right, region.Down);
+                    regions.Add(region);
+                }
 
-           // string message = string.Format("topleft; {0} , {1}", topleft.X, topleft.Y);
-           // Console.WriteLine(message);
+                FloodFilledRegion.RemoveSmallRegions(regions);
 
-
-
-            string outputfilePath = Path.Join(exportpath, "panel1.jpg");
-            //CutAndWriteToFile(comicPage, 50, 50, outputfilePath);
-
-            Graphics graafix = Graphics.FromImage(comicPage);
-           // graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleft.X - 5, topleft.Y - 5, 10, 10);
-            //graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleftLeft.X - 5, topleftLeft.Y - 5, 10, 10);
-            //graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleftDown.X - 5, topleftDown.Y - 5, 10, 10);
-
-
-            comicPage.Save(outputfilePath, ImageFormat.Jpeg);
-
-
+                int counter = 1;
+                foreach (FloodFilledRegion region in regions)
+                {
+                    string outputfilename = string.Format("panel{0}.jpg", counter);
+                    string outputfilePath = Path.Join(exportpath, outputfilename);
+                    CutAndWriteToFile(comicPage, region.Left, region.Top, region.Right, region.Down, outputfilePath);
+                    counter++;
+                }
+            }
 
         }
 
 
-        private static void CutAndWriteToFile(Bitmap bitmap, int width, int height, string outputfilePath)
+        private static void CutAndWriteToFile(Bitmap bitmap, int left, int top, int right, int bottom, string outputfilePath)
         {
-             Rectangle region = new Rectangle(0, 0, width, height);
-             Bitmap panel = bitmap.Clone(region, PixelFormat.DontCare);
-
-           
+            int width = right - left;
+            int height = bottom - top;
+             Rectangle region = new Rectangle(left, top, width, height);
+             Bitmap panel = bitmap.Clone(region, PixelFormat.DontCare); 
             panel.Save(outputfilePath, ImageFormat.Jpeg);
 
         }

@@ -19,23 +19,28 @@ namespace ComicPanelsSplitter
             Console.WriteLine("Width: " + comicPage.Width.ToString());
             Console.WriteLine("Height: " + comicPage.Height.ToString());
 
-           
-            Coordinate topleft = Util.FindTopLeftNonWhitePixel(comicPage);
 
-           
-           if (topleft != null)
-            {
-                string message = string.Format("topleft; {0} , {1}", topleft.X, topleft.Y);
-                Console.WriteLine(message);
-            }
+         //   Coordinate topleft = Util.FindTopLeftNonWhitePixel(comicPage);
+         //   Coordinate topleftLeft = Util.FindFirstWhitePixelLeftFrom(comicPage, topleft);
+         //   Coordinate topleftDown = Util.FindFirstWhitePixelDownFrom(comicPage, topleft);
+
+           // string message = string.Format("topleft; {0} , {1}", topleft.X, topleft.Y);
+           // Console.WriteLine(message);
+
 
 
             string outputfilePath = Path.Join(exportpath, "panel1.jpg");
             //CutAndWriteToFile(comicPage, 50, 50, outputfilePath);
 
             Graphics graafix = Graphics.FromImage(comicPage);
-            graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleft.X - 5, topleft.Y - 5, 10, 10);
+           // graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleft.X - 5, topleft.Y - 5, 10, 10);
+            //graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleftLeft.X - 5, topleftLeft.Y - 5, 10, 10);
+            //graafix.DrawEllipse(new Pen(Brushes.Red, 5), topleftDown.X - 5, topleftDown.Y - 5, 10, 10);
+
+
             comicPage.Save(outputfilePath, ImageFormat.Jpeg);
+
+
 
         }
 

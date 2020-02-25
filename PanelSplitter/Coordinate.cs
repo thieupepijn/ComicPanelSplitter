@@ -18,14 +18,14 @@ namespace PanelSplitter
             X = x;
             Y = y;
 
-            //color is more ore less white
-            if ((color.A > 245) && (color.R > 245) && (color.G > 245) && (color.B > 245))
+            //pixel is not white or almost white
+            if ((color.R < 100) || (color.G < 100) || (color.B < 100))
             {
-                FloodFillStatus = Enumerations.FloodFillStatus.NotSuitable;
+                FloodFillStatus = Enumerations.FloodFillStatus.Suitable;
             }
             else
             {
-                FloodFillStatus = Enumerations.FloodFillStatus.Suitable;
+                FloodFillStatus = Enumerations.FloodFillStatus.NotSuitable;
             }
         }
 

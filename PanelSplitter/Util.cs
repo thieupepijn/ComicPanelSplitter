@@ -35,12 +35,6 @@ namespace PanelSplitter
             return coords;
         }
 
-        public static Bitmap Resize(Bitmap bitmap, int factor)
-        {
-            int width = bitmap.Width / factor;
-            int height = bitmap.Height / factor;
-            return new Bitmap(bitmap, new Size(width, height));
-        }
 
         public static void CutandWriteToFile(List<FloodFilledRegion> regions, Bitmap bitmap, string exportpath)
         {

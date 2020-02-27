@@ -66,7 +66,7 @@ namespace ComicPanelsSplitter
                 int maxX = coords.GetLength(0);
                 int maxY = coords.GetLength(1);
                 regions = FloodFilledRegion.SortRegions(regions, maxX, maxY);
-                Util.CutandWriteToFile(regions, comicPage, exportPath);
+                Util.CutandWriteToFile(regions, comicPage, exportPath, new FileInfo(imageFilePath).Name);
             }
         }
 

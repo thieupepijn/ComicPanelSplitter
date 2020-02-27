@@ -11,10 +11,18 @@ namespace PanelSplitter
     {
 
 
-        public static string GetOutputFilePath(string outputDirectory, int counter)
+        public static string GetOutputFilePath(string outputDirectory, string originalFileName, int counter)
         {
-            string filename = string.Format("panel{0}.jpg", counter);
-            return Path.Combine(outputDirectory, filename);
+            if (String.IsNullOrEmpty(originalFileName))
+            {
+                string filename = string.Format("panel{0}.jpg", counter);
+                return Path.Combine(outputDirectory, filename);
+            }
+            else
+            {
+                string filename = string.Format("{0}_Panel{1}.jpg", Path.GetFileNameWithoutExtension(originalFileName), counter);
+                return Path.Combine(outputDirectory, filename);
+            }         
         }
 
 
@@ -36,12 +44,12 @@ namespace PanelSplitter
         }
 
 
-        public static void CutandWriteToFile(List<FloodFilledRegion> regions, Bitmap bitmap, string exportpath)
+        public static void CutandWriteToFile(List<FloodFilledRegion> regions, Bitmap bitmap, string exportpath, string originalFileName)
         {
             int counter = 1;
             foreach (FloodFilledRegion region in regions)
             {
-                string outputFilePath = Util.GetOutputFilePath(exportpath, counter);
+                string outputFilePath = Util.GetOutputFilePath(exportpath, originalFileName, counter);
                 CutAndWriteToFile(bitmap, region.Left,  region.Top, region.Right, region.Down, outputFilePath);
                 counter++;
             }

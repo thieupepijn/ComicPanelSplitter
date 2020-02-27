@@ -17,15 +17,19 @@ namespace PanelSplitter
         {
             X = x;
             Y = y;
+            FloodFillStatus = GetFloodFillStatus(color);           
+        }
 
+        private Enumerations.FloodFillStatus GetFloodFillStatus(Color color)
+        {
             //pixel is not white or almost white
-            if ((color.R < 100) || (color.G < 100) || (color.B < 100))
+            if ((color.R < 200) || (color.G < 200) || (color.B < 200))
             {
-                FloodFillStatus = Enumerations.FloodFillStatus.Suitable;
+                return Enumerations.FloodFillStatus.Suitable;
             }
             else
             {
-                FloodFillStatus = Enumerations.FloodFillStatus.NotSuitable;
+                return Enumerations.FloodFillStatus.NotSuitable;
             }
         }
 
@@ -135,6 +139,10 @@ namespace PanelSplitter
             {
                 return true;
             }
+            else if ((object.ReferenceEquals(coordinate1, null)) && (!object.ReferenceEquals(coordinate2, null)))
+            {
+                return false;
+            }
             else
             {
                 return coordinate1.Equals(coordinate2);
@@ -143,7 +151,19 @@ namespace PanelSplitter
 
         public static bool operator !=(Coordinate coordinate1, Coordinate coordinate2)
         {
-            return !coordinate1.Equals(coordinate2);
+            if ((object.ReferenceEquals(coordinate1, null)) && (!object.ReferenceEquals(coordinate2, null)))
+            {
+                return true;
+            }
+            else if ((object.ReferenceEquals(coordinate1, null)) && (object.ReferenceEquals(coordinate2, null)))
+            {
+                return false;
+            }
+            else
+            {
+                return !coordinate1.Equals(coordinate2);
+            }
+          
         }
 
 

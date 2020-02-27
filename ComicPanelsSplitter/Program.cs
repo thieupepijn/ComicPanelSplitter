@@ -41,8 +41,12 @@ namespace ComicPanelsSplitter
             }
             catch(Exception ex)
             {
-                // WriteMessageToConsole(string.Format("Something went wrong, cannot process image {0}", imageFilePath));
+#if DEBUG
                 WriteMessageToConsole(ex.Message);
+#else
+                WriteMessageToConsole(string.Format("Something went wrong, cannot process image {0}", imageFilePath));
+#endif
+
                 return;
             }
             WriteMessageToConsole(string.Format("Image {0} splitted in {1} panels which were written to {2}", imageFilePath, regions.Count, exportPath)); 

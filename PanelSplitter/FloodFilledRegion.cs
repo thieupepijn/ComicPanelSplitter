@@ -15,7 +15,7 @@ namespace PanelSplitter
         public int Right { get; private set; }
         public int Down { get; private set; }
 
-
+       
         public FloodFilledRegion(Coordinate[,] coords)
         {
             Coordinate startCoordinate = Coordinate.GetStartCoordinate(coords);
@@ -108,10 +108,13 @@ namespace PanelSplitter
             regions.RemoveAll(r => r.Down - r.Top < 10);
         }
 
-        //TODO REPLACE BY CONSTANT
-        public static List<FloodFilledRegion> SortRegions(List<FloodFilledRegion> regions)
+     
+        public static List<FloodFilledRegion> SortRegions(List<FloodFilledRegion> regions, int maxX, int maxY)
         {
-           return regions.OrderBy(r => r.Top / 25).ThenBy(r => r.Left / 25).ToList();
+            int equalizerX = maxX / Constants.COORDINATEEQUALIZER;
+            int equalizerY = maxY / Constants.COORDINATEEQUALIZER; 
+
+           return regions.OrderBy(r => r.Top / equalizerX).ThenBy(r => r.Left / equalizerY).ToList();
         }
 
 

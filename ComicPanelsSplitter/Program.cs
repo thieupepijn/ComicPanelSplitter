@@ -39,7 +39,7 @@ namespace ComicPanelsSplitter
             {
                 SplitInPanels(imageFilePath, exportPath, regions);
             }
-            catch(Exception ex)
+            catch
             {
                 WriteMessageToConsole(string.Format("Something went wrong, cannot process image {0}", imageFilePath));
                 return;
@@ -63,7 +63,9 @@ namespace ComicPanelsSplitter
                 }
 
                 FloodFilledRegion.RemoveSmallRegions(regions);
-                regions = FloodFilledRegion.SortRegions(regions);
+                int maxX = coords.GetLength(0);
+                int maxY = coords.GetLength(1);
+                regions = FloodFilledRegion.SortRegions(regions, maxX, maxY);
                 Util.CutandWriteToFile(regions, comicPage, exportPath);
             }
         }

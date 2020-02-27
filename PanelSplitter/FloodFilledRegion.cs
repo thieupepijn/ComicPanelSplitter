@@ -108,9 +108,10 @@ namespace PanelSplitter
             regions.RemoveAll(r => r.Down - r.Top < 10);
         }
 
+        //TODO REPLACE BY CONSTANT
         public static List<FloodFilledRegion> SortRegions(List<FloodFilledRegion> regions)
         {
-           return regions.OrderBy(r => r.Top).ThenBy(r => r.Left).ToList();
+           return regions.OrderBy(r => r.Top / 25).ThenBy(r => r.Left / 25).ToList();
         }
 
 

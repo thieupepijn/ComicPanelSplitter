@@ -6,6 +6,6 @@ Only works well with comics in traditional format, meaning the panels being plac
 
 Single executable for available in release. 
 
-Usage: ComicPanelSplitter.exe <ComicImageFile> <ExportPath>
+Usage: ComicPanelSplitter.exe &lt;ComicImageFile&gt; &lt;ExportPath&gt;
 
 

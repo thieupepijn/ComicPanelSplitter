@@ -31,33 +31,27 @@ namespace ComicPanelsSplitter
 
             if (!Directory.Exists(exportPath))
             {
-                WriteMessageToConsole(string.Format("Directory {0} does not exist", exportPath));
+                WriteMessageToConsole(string.Format("Exportdirectory {0} does not exist", exportPath));
                 return;
             }
 
-            int numberOfPanels = 0;
-            try
-            {
-                numberOfPanels = SplitInPanels(imageFilePath, exportPath);
-            }
-            catch(Exception ex)
-            {
-#if DEBUG
-                WriteMessageToConsole(ex.Message);
-#else
-                WriteMessageToConsole(string.Format("Something went wrong, cannot process image {0}", imageFilePath));
-#endif
-
-                return;
-            }
-           // WriteMessageToConsole(string.Format("Image {0} splitted in {1} panels which were written to {2}", imageFilePath, numberOfPanels, exportPath)); 
-        }
+            int numberOfPanels = SplitInPanels(imageFilePath, exportPath);         
+        }        
 
         private static int SplitInPanels(string path, string exportPath)
         {
             if (File.Exists(path))
             {
-                return SplitInPanels(new FileInfo(path), exportPath);
+                try
+                {
+                    return SplitInPanels(new FileInfo(path), exportPath);
+                }
+                catch
+                {
+                    string message = string.Format("Couldn't process file {0}", new FileInfo(path).Name);
+                    Console.WriteLine(message);
+                    return 0;
+                }
             }
             else if (Directory.Exists(path))
             {
@@ -78,7 +72,16 @@ namespace ComicPanelsSplitter
             List<FileInfo> fileInfos = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories).ToList();
             foreach(FileInfo fileInfo in fileInfos)
             {
-                numberOfPanels += SplitInPanels(fileInfo, exportPath);
+                try
+                {
+                    numberOfPanels += SplitInPanels(fileInfo, exportPath);
+                }
+                catch
+                {
+                    string message = string.Format("Couldn't process file {0}", fileInfo.Name);
+                    Console.WriteLine(message);
+                    continue;
+                }
             }
             return numberOfPanels;
         }
@@ -103,6 +106,8 @@ namespace ComicPanelsSplitter
                 regions = FloodFilledRegion.SortRegions(regions, maxX, maxY);
                 Util.CutandWriteToFile(regions, comicPage, exportPath, fileInfo.Name);
             }
+            string message = string.Format("Split {0} into {1} panels", fileInfo.Name, regions.Count);
+            Console.WriteLine(message);
             return regions.Count;
         }
 

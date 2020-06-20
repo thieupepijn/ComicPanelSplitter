@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using PanelSplitter;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ComicPanelsSplitter
 {
@@ -44,7 +45,10 @@ namespace ComicPanelsSplitter
             {
                 try
                 {
-                    return SplitInPanels(new FileInfo(path), exportPath);
+                    FileInfo fileInfo = new FileInfo(path);
+                    int numberOfPanels = SplitInPanels(fileInfo, exportPath);
+                    Console.WriteLine(string.Format("Split {0} into {1} panels", fileInfo.Name, numberOfPanels));
+                    return numberOfPanels;
                 }
                 catch
                 {
@@ -69,20 +73,27 @@ namespace ComicPanelsSplitter
         private static int SplitInPanels(DirectoryInfo directoryInfo, string exportPath)
         {
             int numberOfPanels = 0;
+            int counter = 0;
             List<FileInfo> fileInfos = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories).ToList();
-            foreach(FileInfo fileInfo in fileInfos)
+            Parallel.ForEach(fileInfos, f =>
             {
-                try
                 {
-                    numberOfPanels += SplitInPanels(fileInfo, exportPath);
+                    try
+                    {
+                        numberOfPanels += SplitInPanels(f, exportPath);
+                        counter++;
+                        string message = string.Format("processed {0} of {1} files", counter, fileInfos.Count);
+                        Console.WriteLine(message);
+
+                    }
+                    catch
+                    {
+                       // string message = string.Format("Couldn't process file {0}", f.Name);
+                       // Console.WriteLine(message);
+                        //continue;
+                    }
                 }
-                catch
-                {
-                    string message = string.Format("Couldn't process file {0}", fileInfo.Name);
-                    Console.WriteLine(message);
-                    continue;
-                }
-            }
+            });
             return numberOfPanels;
         }
 
@@ -98,6 +109,12 @@ namespace ComicPanelsSplitter
                     FloodFilledRegion region = new FloodFilledRegion(coords);
                     region.ResetFloodedCoords(coords, region.Left, region.Top, region.Right, region.Down);
                     regions.Add(region);
+
+                    if (regions.Count > Constants.MAXPANELSPERPAGE)
+                    {
+                      //  Console.WriteLine(string.Format("{0} has too many panels", fileInfo.Name));
+                        return 0;
+                    }
                 }
 
                 FloodFilledRegion.RemoveSmallRegions(regions);
@@ -105,9 +122,7 @@ namespace ComicPanelsSplitter
                 int maxY = coords.GetLength(1);
                 regions = FloodFilledRegion.SortRegions(regions, maxX, maxY);
                 Util.CutandWriteToFile(regions, comicPage, exportPath, fileInfo.Name);
-            }
-            string message = string.Format("Split {0} into {1} panels", fileInfo.Name, regions.Count);
-            Console.WriteLine(message);
+            }         
             return regions.Count;
         }
 

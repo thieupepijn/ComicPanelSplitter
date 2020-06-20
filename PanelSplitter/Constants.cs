@@ -7,5 +7,9 @@ namespace PanelSplitter
     public class Constants
     {
         public const int COORDINATEEQUALIZER = 20;
+
+        public const int MAXPANELSPERPAGE = 25;
+
+
     }
 }

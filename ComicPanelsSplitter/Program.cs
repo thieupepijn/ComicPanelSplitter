@@ -72,6 +72,7 @@ namespace ComicPanelsSplitter
 
         private static int SplitInPanels(DirectoryInfo directoryInfo, string exportPath)
         {
+            DateTime before = DateTime.Now;
             int numberOfPanels = 0;
             int counter = 0;
             List<FileInfo> fileInfos = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories).ToList();
@@ -83,7 +84,7 @@ namespace ComicPanelsSplitter
                     try
                     {
                         numberOfPanels += SplitInPanels(f, exportPath);
-                        logLines.Add(new LogLine(string.Format("split {0} into {1} panels", f.Name, numberOfPanels), fileInfos.IndexOf(f)));
+                        logLines.Add(new LogLine(f.Name, string.Format("split {0} into {1} panels", f.Name, numberOfPanels), fileInfos.IndexOf(f)));
                         counter++;
                         Console.WriteLine(string.Format("processed {0} of {1} files", counter, fileInfos.Count));
 
@@ -96,8 +97,9 @@ namespace ComicPanelsSplitter
                     }
                 }
             });
+            DateTime after = DateTime.Now;
             string logFileName = LogLine.WriteLog(logLines, exportPath);
-            Console.WriteLine(string.Format("Log written to {0}", logFileName));
+            WriteFinishedMessageToConsole(fileInfos.Count, numberOfPanels, logFileName, before, after);
             return numberOfPanels;
         }
 
@@ -141,10 +143,19 @@ namespace ComicPanelsSplitter
             WriteMessageToConsole(builder.ToString());
         }
 
+       
         private static void WriteMessageToConsole(string message)
         {
             Console.WriteLine();
             Console.WriteLine(message);
+        }
+
+        private static void WriteFinishedMessageToConsole(int numberOfFiles, int numberOfPanels, string logFile, DateTime before, DateTime after)
+        {
+            TimeSpan timespan = after - before;
+            string message = string.Format("{0} files processed in {1} seconds into {2} panels, log written to {3}", 
+                            numberOfFiles, numberOfPanels, timespan.Seconds, logFile);
+            WriteMessageToConsole(message);
         }
         
 

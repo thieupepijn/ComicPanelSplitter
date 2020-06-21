@@ -75,15 +75,17 @@ namespace ComicPanelsSplitter
             int numberOfPanels = 0;
             int counter = 0;
             List<FileInfo> fileInfos = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories).ToList();
+            List<LogLine> logLines = new List<LogLine>();
+            
             Parallel.ForEach(fileInfos, f =>
             {
                 {
                     try
                     {
                         numberOfPanels += SplitInPanels(f, exportPath);
+                        logLines.Add(new LogLine(string.Format("split {0} into {1} panels", f.Name, numberOfPanels), fileInfos.IndexOf(f)));
                         counter++;
-                        string message = string.Format("processed {0} of {1} files", counter, fileInfos.Count);
-                        Console.WriteLine(message);
+                        Console.WriteLine(string.Format("processed {0} of {1} files", counter, fileInfos.Count));
 
                     }
                     catch
@@ -94,6 +96,8 @@ namespace ComicPanelsSplitter
                     }
                 }
             });
+            string logFileName = LogLine.WriteLog(logLines, exportPath);
+            Console.WriteLine(string.Format("Log written to {0}", logFileName));
             return numberOfPanels;
         }
 

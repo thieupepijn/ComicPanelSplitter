@@ -73,7 +73,7 @@ namespace ComicPanelsSplitter
         private static int SplitInPanels(DirectoryInfo directoryInfo, string exportPath)
         {
             DateTime before = DateTime.Now;
-            int counter = 0;
+            int counter = 1;
             List<FileInfo> fileInfos = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories).ToList();
             List<LogLine> logLines = new List<LogLine>();
             
@@ -84,15 +84,14 @@ namespace ComicPanelsSplitter
                     {
                         int numberOfPanels = SplitInPanels(f, exportPath);
                         logLines.Add(new LogLine(f, numberOfPanels));
-                        counter++;
                         Console.WriteLine(string.Format("processed {0} of {1} files", counter, fileInfos.Count));
                     }
                     catch
                     {
-                       // string message = string.Format("Couldn't process file {0}", f.Name);
-                       // Console.WriteLine(message);
-                        //continue;
+                        logLines.Add(new LogLine(f, 0));
+                        Console.WriteLine(string.Format("processed {0} of {1} files", counter, fileInfos.Count));
                     }
+                    counter++;
                 }
             });
             DateTime after = DateTime.Now;

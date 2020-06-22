@@ -73,7 +73,6 @@ namespace ComicPanelsSplitter
         private static int SplitInPanels(DirectoryInfo directoryInfo, string exportPath)
         {
             DateTime before = DateTime.Now;
-            int numberOfPanels = 0;
             int counter = 0;
             List<FileInfo> fileInfos = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories).ToList();
             List<LogLine> logLines = new List<LogLine>();
@@ -83,11 +82,10 @@ namespace ComicPanelsSplitter
                 {
                     try
                     {
-                        numberOfPanels += SplitInPanels(f, exportPath);
-                        logLines.Add(new LogLine(f.Name, string.Format("split {0} into {1} panels", f.Name, numberOfPanels), fileInfos.IndexOf(f)));
+                        int numberOfPanels = SplitInPanels(f, exportPath);
+                        logLines.Add(new LogLine(f, numberOfPanels));
                         counter++;
                         Console.WriteLine(string.Format("processed {0} of {1} files", counter, fileInfos.Count));
-
                     }
                     catch
                     {
@@ -99,8 +97,9 @@ namespace ComicPanelsSplitter
             });
             DateTime after = DateTime.Now;
             string logFileName = LogLine.WriteLog(logLines, exportPath);
-            WriteFinishedMessageToConsole(fileInfos.Count, numberOfPanels, logFileName, before, after);
-            return numberOfPanels;
+            int totalNumberOfPanels = logLines.Sum(l => l.NumberOfPanels);
+            WriteFinishedMessageToConsole(fileInfos.Count, totalNumberOfPanels, logFileName, before, after);
+            return totalNumberOfPanels;
         }
 
         private static int SplitInPanels(FileInfo fileInfo, string exportPath)
@@ -154,7 +153,7 @@ namespace ComicPanelsSplitter
         {
             TimeSpan timespan = after - before;
             string message = string.Format("{0} files processed in {1} seconds into {2} panels, log written to {3}", 
-                            numberOfFiles, numberOfPanels, timespan.Seconds, logFile);
+                            numberOfFiles, timespan.Seconds, numberOfPanels, logFile);
             WriteMessageToConsole(message);
         }
         

@@ -9,22 +9,22 @@ namespace ComicPanelsSplitter
 {
     public class LogLine
     {
-        public string FileName { get; set; }
+        public FileInfo FileInfo { get; private set; }
+        public int NumberOfPanels { get; private set; }
         public string Message { get; private set; }
-        public int Number { get; private set; }
-
-        public LogLine(string fileName, string message, int number)
+       
+        public LogLine(FileInfo fileInfo, int numberOfPanels)
         {
-            FileName = fileName;
-            Message = message;
-            Number = number;
+            FileInfo = fileInfo;
+            NumberOfPanels = numberOfPanels;
+            Message = string.Format("split {0} into {1} panels", FileInfo.Name, numberOfPanels);
         }
 
 
         public static string WriteLog(List<LogLine> loglines, string exportPath)
         {
             string logFileName = Path.Join(exportPath, "log.txt");
-            loglines = loglines.OrderBy(l => l.FileName.Length).ThenBy(l => l.FileName).ToList(); //, new NumberComparer()).ToList(); 
+            loglines = loglines.OrderBy(l => l.FileInfo.DirectoryName).ThenBy(l => l.FileInfo.Name.Length).ThenBy(l => l.FileInfo.Name).ToList(); 
                 for (int counter = 0; counter<loglines.Count; counter++)
             {
                 LogLine line = loglines[counter];
@@ -36,26 +36,4 @@ namespace ComicPanelsSplitter
         }
 
     }
-
-    public class NumberComparer : IComparer<int>
-    {
-        public int Compare(int x, int y)
-        {
-            if (x > y)
-            {
-                return 1;
-            }
-            else if (x < y)
-            {
-                return -1;
-            }
-            else
-            {
-                return 0;
-            }
-                    
-        }
-    }
-
-
 }
